@@ -1,0 +1,252 @@
+﻿@page "~/manager/contactdetails"
+@model ContactModule.Areas.Manager.Pages.ContactEditModel
+@inject ManagerLocalizer Localizer
+@section script {
+    <script src="~/manager/contactmodule/js/ContactDetailsEdit.js"></script>
+    <script type="text/javascript">contactdetailsview.load();</script>
+}
+<div id="ContactDetailsEdit">
+    <div class="top">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">@Localizer.General["Settings"]</li>
+                <li class="breadcrumb-item active" aria-current="page">@Localizer.General["Contact Details"]</li>
+            </ol>
+        </nav>
+
+        <div class="container-fluid app" :class="{ ready: !loading }">
+            <div class="top-nav">
+                <a class="btn btn-success" v-if="detailsModel != null" v-on:click.prevent="saveContactDetails">
+                    <span class="fas fa-palette"></span> Save
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid app" :class="{ ready: !loading }">
+
+        @* Profile Edit *@
+        <div class="card" v-if="detailsModel != null && detailsModel.profile != null">
+            <div class="card-header">
+                <span class="title">@Localizer.General["Profile"]</span>
+            </div>
+            <div class="card-body">
+                <div class="profile-edit-app">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <div class="field-body profile-image-edit">
+                                    <div class="profile-image">
+                                        <img class="img-fluid rounded-circle mx-auto d-block" :src="profileImageUrl" />
+
+                                        <button v-on:click.prevent="selectProfileImage" class="btn btn-primary btn-edit text-center">
+                                            <i class="fas fa-pen"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>Name</label>
+                                    <div class="field-body">
+                                        <input type="text" class="form-control" v-model="detailsModel.profile.name.value">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label>Aka</label>
+                                    <div class="field-body">
+                                        <input type="text" class="form-control" v-model="detailsModel.profile.aka.value">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label>Intro</label>
+                                    <div class="field-body">
+                                        <textarea class="form-control" v-model="detailsModel.profile.intro.value" rows="4" maxlength="165"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Contact Info Edit *@
+        <div class="card" v-if="detailsModel != null && detailsModel.profile != null">
+            <div class="card-header">
+                <span class="title">@Localizer.General["Contact Info"]</span>
+            </div>
+            <div class="card-body">
+                <div class="info-edit-app">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Email Address</label>
+                            <div class="field-body contact-info-edit">
+                                <i class="fas fa-at"></i>
+                                <input type="text" class="form-control email-edit-input" v-model="detailsModel.contactInfo.email.value">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label>Address</label>
+                            <div class="field-body contact-info-edit">
+                                <i class="fas fa-at"></i>
+                                <input type="text" class="form-control email-edit-input" v-model="detailsModel.contactInfo.address.value">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label>Uk Phone Number</label>
+                            <div class="field-body contact-info-edit">
+                                <i class="fas fa-phone"></i>
+                                <input type="text" class="form-control" v-model="detailsModel.contactInfo.ukPhone.value">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label>USA Phone Number</label>
+                            <div class="field-body contact-info-edit">
+                                <i class="fas fa-phone"></i>
+                                <input type="text" class="form-control" v-model="detailsModel.contactInfo.usaPhone.value">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Opening Times Edit *@
+        <div class="card" v-if="detailsModel != null && detailsModel.openingTimes != null">
+            <div class="card-header">
+                <span class="title">@Localizer.General["Opening Times"]</span>
+            </div>
+            <div class="card-body">
+                <div class="opening-times-app">
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <div class="field-body opening-time">
+                                <label>Monday</label>
+                                <div class="content">
+                                    <span>Open</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.monday.open.value">
+                                </div>
+
+                                <div class="content">
+                                    <span>Close</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.monday.close.value">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <div class="field-body opening-time">
+                                <label>Tuesday</label>
+                                <div class="content">
+                                    <span>Open</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.tuesday.open.value">
+                                </div>
+
+                                <div class="content">
+                                    <span>Close</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.tuesday.close.value">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <div class="field-body opening-time">
+                                <label>Wednesday</label>
+                                <div class="content">
+                                    <span>Open</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.wednesday.open.value">
+                                </div>
+
+                                <div class="content">
+                                    <span>Close</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.wednesday.close.value">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <div class="field-body opening-time">
+                                <label>Thursday</label>
+                                <div class="content">
+                                    <span>Open</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.thursday.open.value">
+                                </div>
+
+                                <div class="content">
+                                    <span>Close</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.thursday.close.value">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <div class="field-body opening-time">
+                                <label>Friday</label>
+                                <div class="content">
+                                    <span>Open</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.friday.open.value">
+                                </div>
+
+                                <div class="content">
+                                    <span>Close</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.friday.close.value">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <div class="field-body opening-time">
+                                <label>Saturday</label>
+                                <div class="content">
+                                    <span>Open</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.saturday.open.value">
+                                </div>
+
+                                <div class="content">
+                                    <span>Close</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.saturday.close.value">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <div class="field-body opening-time">
+                                <label>Sunday</label>
+                                <div class="content">
+                                    <span>Open</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.sunday.open.value">
+                                </div>
+
+                                <div class="content">
+                                    <span>Close</span>
+                                    <input type="text" class="form-control" v-model="detailsModel.openingTimes.sunday.close.value">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
